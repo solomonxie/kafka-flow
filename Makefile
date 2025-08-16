@@ -5,7 +5,10 @@ EC2_ID := "$$(terraform -chdir=deploy/terraform output -raw instance_id)"
 
 
 deploy-infra:
-	terraform -chdir=deploy/terraform apply
+	terraform -chdir=deploy/terraform apply --auto-approve
+
+deploy-software:
+	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i deploy/ansible/inventory.ini deploy/ansible/site.yml
 
 
 destroy-infra:
