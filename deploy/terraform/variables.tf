@@ -19,3 +19,8 @@ variable "private_key_path" {
   type        = string
   description = "Path to local SSH private key file for output command"
 }
+
+variable "aws_profile" {
+  type        = string
+  description = "Which AWS Profile to use for deployment"
+}

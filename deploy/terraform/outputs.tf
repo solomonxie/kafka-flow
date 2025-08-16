@@ -17,3 +17,13 @@ output "ssh_kafka_command" {
   value       = "ssh -i ${var.private_key_path} ubuntu@${aws_instance.kafka_node.public_ip}"
   description = "Command to SSH into the Kafka node"
 }
+
+output "instance_id" {
+  value       = "${aws_instance.kafka_node.id}"
+  description = "EC2 instance ID"
+}
+
+output "aws_profile" {
+  value       = "${var.aws_profile}"
+  description = "Active AWS Profile"
+}
