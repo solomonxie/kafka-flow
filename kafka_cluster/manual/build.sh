@@ -39,12 +39,13 @@ sudo bin/kafka-storage.sh format -t $CLUSTER_ID -c config/server.properties
 sudo chown -R ubuntu:ubuntu /var/lib/kafka-logs
 
 # Manually run server in the foreground (open another shell for another node)
+# note: can add KAFKA_HEAP_OPTS="-Xmx512M -Xms512M" option to protect mem
 nohup /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties >> /tmp/kafka.log 2>&1 &
 
-# Test if server is up:
-telnet 127.0.0.1 9092
-
 # ^^^ repeat the all above steps on node2/node3
+
+# Test if cluster is up: (test only succeed after all 3 nodes are setup)
+telnet 127.0.0.1 9092
 
 # =====================================================================
 # ============== ONCE ALL 3 NODES ABOVE ARE RUNNING ===================
@@ -56,7 +57,7 @@ bin/kafka-topics.sh --bootstrap-server node1_ip:9092 --list
 
 # Create a topic replicated across all 3 brokers (replication-factor 3 needs 3 live brokers)
 bin/kafka-topics.sh --create \
-  --bootstrap-server ${NODE1}:9092 \
+  --bootstrap-server node1_ip:9092 \
   --replication-factor 3 \
   --partitions 3 \
   --topic clickstream-raw
