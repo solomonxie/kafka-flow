@@ -1,18 +1,18 @@
 export
 AWS_PROFILE := prod
 TF_VAR_aws_profile := ${AWS_PROFILE}
-EC2_ID := "$$(terraform -chdir=deploy/terraform output -raw instance_id)"
+EC2_ID := "$$(terraform -chdir=terraform output -raw instance_id)"
 
 
 deploy-infra:
-	terraform -chdir=deploy/terraform apply --auto-approve
+	terraform -chdir=terraform apply --auto-approve
 
 deploy-software:
-	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i deploy/ansible/inventory.ini deploy/ansible/site.yml
+	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/inventory.ini ansible/site.yml
 
 
 destroy-infra:
-	terraform -chdir=deploy/terraform destroy
+	terraform -chdir=terraform destroy
 
 
 stop-server:
