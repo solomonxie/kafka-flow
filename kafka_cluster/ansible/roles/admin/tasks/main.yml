@@ -32,12 +32,18 @@
     group: ubuntu
     creates: "{{ kafka_dir }}/bin/kafka-server-start.sh"
 
-- name: Configure listeners and data directory in server.properties
+- name: Compute controller quorum voters string from all kafka_brokers hosts
+  ansible.builtin.set_fact:
+    kafka_quorum_voters: "{% for h in groups['kafka_brokers'] %}{{ hostvars[h].node_id }}@{{ hostvars[h].ansible_host }}:9093{% if not loop.last %},{% endif %}{% endfor %}"
+
+- name: Configure node identity, quorum voters, listeners and data directory in server.properties
   ansible.builtin.lineinfile:
     path: "{{ kafka_dir }}/config/server.properties"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   loop:
+    - { regexp: '^#?node.id=', line: 'node.id={{ node_id }}' }
+    - { regexp: '^#?controller.quorum.voters=', line: 'controller.quorum.voters={{ kafka_quorum_voters }}' }
     - { regexp: '^#?listeners=', line: 'listeners=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093' }
     - { regexp: '^#?advertised.listeners=', line: 'advertised.listeners=PLAINTEXT://{{ ansible_host }}:9092' }
     - { regexp: '^#?log.dirs=', line: 'log.dirs={{ kafka_data_dir }}' }
@@ -55,9 +61,9 @@
     path: "{{ kafka_data_dir }}/meta.properties"
   register: kraft_meta
 
-- name: Format KRaft storage log directory
+- name: Format KRaft storage log directory (multi-node quorum)
   ansible.builtin.command:
-    cmd: "{{ kafka_dir }}/bin/kafka-storage.sh format --standalone -t {{ kafka_cluster_id }} -c {{ kafka_dir }}/config/server.properties"
+    cmd: "{{ kafka_dir }}/bin/kafka-storage.sh format -t {{ kafka_cluster_id }} -c {{ kafka_dir }}/config/server.properties"
   when: not kraft_meta.stat.exists
 
 - name: Ensure all Kafka data files are owned by ubuntu user
