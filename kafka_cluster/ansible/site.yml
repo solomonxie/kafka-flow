@@ -1,0 +1,6 @@
+---
+- name: Deploy and Configure Kafka Node
+  hosts: kafka_brokers
+  become: true
+  roles:
+    - admin

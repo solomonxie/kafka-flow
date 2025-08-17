@@ -1,0 +1,7 @@
+---
+kafka_version: "4.3.1"
+scala_version: "2.13"
+kafka_dir: "/opt/kafka"
+kafka_data_dir: "/var/lib/kafka-logs"
+kafka_heap_opts: "-Xmx512M -Xms512M"
+kafka_cluster_id: "IxqT0OtiQfqRl3kGlGV6tQ"

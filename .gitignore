@@ -7,4 +7,4 @@
 .terraform/
 .terraform.lock.hcl
 
-deploy/ansible/inventory.ini
+*/ansible/inventory.ini
