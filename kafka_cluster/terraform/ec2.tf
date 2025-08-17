@@ -1,6 +1,6 @@
 # --- Security Group for Kafka ---
-resource "aws_security_group" "kafka_sg" {
-  name        = "kafka-node-sg"
+resource "aws_security_group" "kafka_cluster_sg" {
+  name        = "kafka-cluster-sg"
   description = "Allow inbound traffic for Kafka and SSH"
 
   ingress {
@@ -71,7 +71,7 @@ resource "aws_instance" "kafka_node1" {
   ami                    = data.aws_ami.ubuntu_2604.id
   instance_type          = "t2.small"
   key_name               = aws_key_pair.deployer.key_name
-  vpc_security_group_ids = [aws_security_group.kafka_sg.id]
+  vpc_security_group_ids = [aws_security_group.kafka_cluster_sg.id]
   root_block_device {
     volume_size           = 8
     volume_type           = "gp3"
@@ -88,7 +88,7 @@ resource "aws_instance" "kafka_node2" {
   ami                    = data.aws_ami.ubuntu_2604.id
   instance_type          = "t2.small"
   key_name               = aws_key_pair.deployer.key_name
-  vpc_security_group_ids = [aws_security_group.kafka_sg.id]
+  vpc_security_group_ids = [aws_security_group.kafka_cluster_sg.id]
   root_block_device {
     volume_size           = 8
     volume_type           = "gp3"
@@ -105,7 +105,7 @@ resource "aws_instance" "kafka_node3" {
   ami                    = data.aws_ami.ubuntu_2604.id
   instance_type          = "t2.small"
   key_name               = aws_key_pair.deployer.key_name
-  vpc_security_group_ids = [aws_security_group.kafka_sg.id]
+  vpc_security_group_ids = [aws_security_group.kafka_cluster_sg.id]
   root_block_device {
     volume_size           = 8
     volume_type           = "gp3"

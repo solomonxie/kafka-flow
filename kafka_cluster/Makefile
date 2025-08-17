@@ -15,6 +15,8 @@ deploy-infra:
 
 deploy-software:
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/inventory.ini ansible/site.yml
+	# OR, manually execute line by line from:
+	# ./manual/build.sh
 
 
 destroy-infra:
