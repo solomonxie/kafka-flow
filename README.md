@@ -48,10 +48,10 @@ Every sub-project follows the same structure:
 
 ```
 <sub-project>/
-├── terraform/    # provisions EC2 instance(s), security group, key pair
-├── ansible/      # installs Java + Kafka, configures KRaft, runs it as a systemd service
-├── manual/       # build.sh — same steps written out as manual shell commands, for learning
-└── Makefile      # deploy-infra / deploy-software / destroy-infra / start-server / stop-server
+├── terraform/      # provisions EC2 instance(s), security group, key pair
+├── ansible/        # installs Java + Kafka, configures KRaft, runs it as a systemd service
+├── manual_build.sh # same steps written out as manual shell commands, for learning
+└── Makefile        # deploy-infra / deploy-software / destroy-infra / start-server / stop-server
 ```
 
 Kafka runs in **KRaft mode** throughout (no ZooKeeper), on Ubuntu 26.04 `t2.small` EC2
