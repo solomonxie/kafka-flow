@@ -32,15 +32,13 @@
     group: ubuntu
     creates: "{{ kafka_dir }}/bin/kafka-server-start.sh"
 
-- name: Configure listeners and data directory in server.properties
-  ansible.builtin.lineinfile:
-    path: "{{ kafka_dir }}/config/server.properties"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-  loop:
-    - { regexp: '^#?listeners=', line: 'listeners=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093' }
-    - { regexp: '^#?advertised.listeners=', line: 'advertised.listeners=PLAINTEXT://{{ ansible_host }}:9092' }
-    - { regexp: '^#?log.dirs=', line: 'log.dirs={{ kafka_data_dir }}' }
+- name: Deploy Kafka server.properties
+  ansible.builtin.template:
+    src: server.properties.j2
+    dest: "{{ kafka_dir }}/config/server.properties"
+    owner: ubuntu
+    group: ubuntu
+    mode: "0644"
 
 - name: Create Kafka log storage directory
   ansible.builtin.file:
