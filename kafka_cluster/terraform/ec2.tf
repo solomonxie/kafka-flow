@@ -1,3 +1,19 @@
+# The core resource graph.
+# 3 independent resources build in parallel, then 3 instances build in
+# parallel off of them (no dependency between node1/node2/node3):
+#
+#   aws_security_group.kafka_cluster_sg (no deps — SSH 22, Kafka 9092, KRaft 9093)
+#   aws_key_pair.deployer               (no deps — reads var.public_key_path)
+#   data.aws_ami.ubuntu_2604            (no deps — queried from AWS API)
+#           │
+#           ├─────────────┬─────────────┐
+#           ▼             ▼             ▼
+#   aws_instance   aws_instance   aws_instance
+#     .kafka_node1   .kafka_node2   .kafka_node3
+#
+# node_id (1/2/3) is not set here — it's assigned in ansible_inventory.tf
+# and rendered into each node's server.properties by Ansible.
+
 # --- Security Group for Kafka ---
 resource "aws_security_group" "kafka_cluster_sg" {
   name        = "kafka-cluster-sg"

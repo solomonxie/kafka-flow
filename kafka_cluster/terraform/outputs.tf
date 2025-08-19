@@ -1,3 +1,17 @@
+# Leaf nodes — each output just reads attributes off the 3 already-created
+# instances, so these are the last things evaluated in the plan:
+#
+#  aws_instance.kafka_node{1,2,3} ──┬─▶ output.kafka_node_public_ips
+#                                   ├─▶ output.kafka_node_public_dns
+#                                   ├─▶ output.kafka_bootstrap_servers (ip:9092 x3, joined)
+#                                   ├─▶ output.ssh_kafka_commands
+#                                   ├─▶ output.instance_ids
+#                                   └─▶ output.instance_ids_space_separated
+#  var.aws_profile ─────────────────────▶ output.aws_profile
+#
+# instance_ids_space_separated is consumed back out-of-band by the Makefile
+# (`terraform output -raw instance_ids_space_separated`) for start-server /
+# stop-server, which pass it straight to `aws ec2 --instance-ids`.
 output "kafka_node_public_ips" {
   value = {
     node1 = aws_instance.kafka_node1.public_ip
