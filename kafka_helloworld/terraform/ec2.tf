@@ -1,3 +1,17 @@
+# The core resource graph.
+# 3 independent resources build in parallel,
+# and the instance waits on all three:
+#
+#   aws_security_group.kafka_sg         (no deps — SSH 22, Kafka 9092)
+#   aws_key_pair.deployer               (no deps — reads var.public_key_path)
+#   data.aws_ami.ubuntu_2604            (no deps — queried from AWS API)
+#           │
+#           ▼
+#   aws_instance.kafka_node
+#     ├─ ami                    = data.aws_ami.ubuntu_2604.id
+#     ├─ key_name               = aws_key_pair.deployer.key_name
+#     └─ vpc_security_group_ids = [aws_security_group.kafka_sg.id]
+
 # --- Security Group for Kafka ---
 resource "aws_security_group" "kafka_sg" {
   name        = "kafka-node-sg"

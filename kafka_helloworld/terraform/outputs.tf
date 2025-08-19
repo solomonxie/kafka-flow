@@ -1,3 +1,15 @@
+# Leaf nodes — each output just reads an attribute off the already-created
+# instance, so these are the last things evaluated in the plan:
+#
+#  aws_instance.kafka_node ──┬─▶ output.kafka_node_public_ip
+#                            ├─▶ output.kafka_node_public_dns
+#                            ├─▶ output.kafka_bootstrap_server (ip:9092)
+#                            ├─▶ output.ssh_kafka_command
+#                            └─▶ output.instance_id
+#  var.aws_profile ────────────▶ output.aws_profile
+#
+# instance_id is consumed back out-of-band by the Makefile
+# (`terraform output -raw instance_id`) for start-server / stop-server.
 output "kafka_node_public_ip" {
   value       = aws_instance.kafka_node.public_ip
   description = "Public IP of Ubuntu Kafka Node"
