@@ -11,6 +11,9 @@
 #     ├─ ami                    = data.aws_ami.ubuntu_2604.id
 #     ├─ key_name               = aws_key_pair.deployer.key_name
 #     └─ vpc_security_group_ids = [aws_security_group.kafka_sg.id]
+#
+# Self-termination: aws_instance.kafka_node is auto-terminated ~2h after
+# creation by an EventBridge Scheduler rule — see auto_terminate.tf.
 
 # --- Security Group for Kafka ---
 resource "aws_security_group" "kafka_sg" {
@@ -71,6 +74,7 @@ data "aws_ami" "ubuntu_2604" {
 
 
 # --- EC2 Instances ---
+# See auto_terminate.tf: this instance self-terminates ~2h after creation.
 
 # 1. Kafka Node: Ubuntu 26.04 (t2.small, 1 vCPU, 2GB RAM, 25GB EBS)
 resource "aws_instance" "kafka_node" {

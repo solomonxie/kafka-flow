@@ -13,6 +13,9 @@
 #
 # node_id (1/2/3) is not set here — it's assigned in ansible_inventory.tf
 # and rendered into each node's server.properties by Ansible.
+#
+# Self-termination: all 3 nodes are auto-terminated ~2h after creation by
+# a single EventBridge Scheduler rule — see auto_terminate.tf.
 
 # --- Security Group for Kafka ---
 resource "aws_security_group" "kafka_cluster_sg" {
@@ -82,6 +85,7 @@ data "aws_ami" "ubuntu_2604" {
 
 # --- EC2 Instances ---
 # Specs: Ubuntu 26.04 (t2.small, 1 vCPU, 2GB RAM, 25GB EBS)
+# See auto_terminate.tf: these instances self-terminate ~2h after creation.
 
 resource "aws_instance" "kafka_node1" {
   ami                    = data.aws_ami.ubuntu_2604.id

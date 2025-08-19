@@ -11,6 +11,8 @@ terraform apply
   ├─ providers.tf         → auth against AWS
   ├─ variables.tf         → resolve inputs
   ├─ ec2.tf                → sg + key pair + ami lookup → aws_instance x3 (node1/2/3, parallel)
+  ├─ auto_terminate.tf    → EventBridge Scheduler rule: terminates all 3
+  │                          nodes ~2h after creation (cost safety net)
   ├─ ansible_inventory.tf → write ansible/inventory.ini (node_id=1/2/3)
   └─ outputs.tf            → print IPs / bootstrap servers / ssh commands
         │
