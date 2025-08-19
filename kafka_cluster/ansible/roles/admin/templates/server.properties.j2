@@ -1,0 +1,16 @@
+# KRaft node role: this node is both broker and controller
+process.roles=broker,controller
+
+# Unique ID of this node within the cluster
+node.id={{ node_id }}
+
+# Controller quorum: all 3 controller-eligible nodes
+controller.quorum.voters={{ kafka_quorum_voters }}
+controller.listener.names=CONTROLLER
+
+# Network: what to bind vs what clients/peers should connect to
+listeners=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+advertised.listeners=PLAINTEXT://{{ ansible_host }}:9092
+
+# Storage: where log segments are written
+log.dirs={{ kafka_data_dir }}
